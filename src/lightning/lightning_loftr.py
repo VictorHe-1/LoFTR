@@ -124,11 +124,11 @@ class PL_LoFTR(pl.LightningModule):
                     f'skh_bin_score', self.matcher.coarse_matching.bin_score.clone().detach().cpu().data, self.global_step)
 
             # figures
-            if self.config.TRAINER.ENABLE_PLOTTING:
-                compute_symmetrical_epipolar_errors(batch)  # compute epi_errs for each match
-                figures = make_matching_figures(batch, self.config, self.config.TRAINER.PLOT_MODE)
-                for k, v in figures.items():
-                    self.logger.experiment.add_figure(f'train_match/{k}', v, self.global_step)
+            # if self.config.TRAINER.ENABLE_PLOTTING:
+            #     compute_symmetrical_epipolar_errors(batch)  # compute epi_errs for each match
+            #     figures = make_matching_figures(batch, self.config, self.config.TRAINER.PLOT_MODE)
+            #     for k, v in figures.items():
+            #         self.logger.experiment.add_figure(f'train_match/{k}', v, self.global_step)
 
         return {'loss': batch['loss']}
 
@@ -191,12 +191,12 @@ class PL_LoFTR(pl.LightningModule):
                 for k, v in val_metrics_4tb.items():
                     self.logger.experiment.add_scalar(f"metrics_{valset_idx}/{k}", v, global_step=cur_epoch)
                 
-                for k, v in figures.items():
-                    if self.trainer.global_rank == 0:
-                        for plot_idx, fig in enumerate(v):
-                            self.logger.experiment.add_figure(
-                                f'val_match_{valset_idx}/{k}/pair-{plot_idx}', fig, cur_epoch, close=True)
-            plt.close('all')
+            #     for k, v in figures.items():
+            #         if self.trainer.global_rank == 0:
+            #             for plot_idx, fig in enumerate(v):
+            #                 self.logger.experiment.add_figure(
+            #                     f'val_match_{valset_idx}/{k}/pair-{plot_idx}', fig, cur_epoch, close=True)
+            # plt.close('all')
 
         for thr in [5, 10, 20]:
             # log on all ranks for ModelCheckpoint callback to work properly
